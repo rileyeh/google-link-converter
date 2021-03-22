@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Google Drive Links</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        input {
+            width: 250px;
+            border: 2px solid;
+            padding: 10px;
+        }
+
+        button {
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            background-color: darkcyan;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <input type='text' placeholder='your google image link here' />
+    <button>convert URL</button>
+
+    <p id='new-url'></p>
+    <button id='copy-btn' class='hidden'>copy new URL</button>
+
+    <script>
+        const input = document.querySelector("input");
+        const convertBtn = document.querySelector("button");
+        const newUrlDisplay = document.querySelector("#new-url");
+        const copyBtn = document.querySelector("#copy-btn");
+
+        convertBtn.addEventListener("click", () => {
+        if (input.value) {
+            const trimmed = input.value.trim();
+            const newUrl = convertUrl(trimmed);
+
+            input.value = "";
+
+            newUrlDisplay.textContent = newUrl;
+
+            copyBtn.textContent = "copy new URL";
+            copyBtn.classList.remove("hidden");
+            copyBtn.addEventListener("click", () => {
+            copyToClipboard(newUrlDisplay);
+            });
+        }
+        });
+
+        const copyToClipboard = (element) => {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(element).text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+        };
+
+        const convertUrl = (ogUrl) => {
+            let split = ogUrl.split("/");
+            let id = split[split.length - 2];
+            let newUrl = `https://drive.google.com/uc?export=view&id=${id}`;
+            return newUrl;
+        };
+    </script>
+</body>
+</html>
